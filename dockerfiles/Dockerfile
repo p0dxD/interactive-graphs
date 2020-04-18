@@ -6,8 +6,6 @@ RUN npm install -g http-server
 # make the 'app' folder the current working directory
 WORKDIR /app
 
-RUN addgroup -S local && adduser -S local -G local
-USER local:local
 COPY static/ static/
 
 EXPOSE 8082
