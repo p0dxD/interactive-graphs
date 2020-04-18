@@ -5,6 +5,7 @@ projects:
         version: 1.0.0
         stages:
             build:
+                framework: static
                 tool: node
                 version: latest
                 configuration:
