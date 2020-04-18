@@ -1,0 +1,14 @@
+projects:
+    -
+        name: p0dxd/website
+        path: ~
+        version: 1.0.0
+        stages:
+            build:
+                tool: node
+                version: latest
+                configuration:
+                    - 'static/**/*'
+            upload:
+                tool: docker
+                version: ~

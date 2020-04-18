@@ -1,0 +1,17 @@
+#This file fill contain configuration to run a docker inside a machine
+#Main reason for extracting it is allowing for a dynamic run of an application container
+#while also mantaining security and only allowing whats inside this file to be executed with checks
+#for common exploits and ways of obtaining information
+#if it starts with $ it will be transfered from container machine
+#iff that application is allowed to access those specific details
+#else anyone could create a simple app that asks for them and prints the value
+docker:
+    -
+        command: run
+        arguments:
+            config_options: '-itd' 
+            ports:
+                - 82:82
+            environment:
+                PUBLIC_KEY_SECRET: '$PUBLIC_KEY_SECRET'
+                PRIVATE_KEY_SECRET: '$PRIVATE_KEY_SECRET'
