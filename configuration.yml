@@ -1,6 +1,6 @@
 projects:
     -
-        name: p0dxd/website
+        name: p0dxd/graphs
         path: ~
         version: 1.0.0
         stages:
