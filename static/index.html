@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<svg width="960" height="500"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <head></head>
 <body>
-    <p>Kn=<input type="text" id="number" value="1"></p>
-    <button onclick="incrementGraph()">Generate</button>
-<script src="out.js"></script>
+    <h1>Complete Graph</h1>
+    <svg id="complete" width="960" height="720"></svg>
+    <p>Kn=<input type="text" id="number_complete" value="1">(max 100)<button onclick="incrementGraph()">Generate</button></p>
+    <!-- <button onclick="incrementGraph()">Generate</button> -->
+    <h1>Cyclic Graph</h1>
+    <svg id="complete_two" width="960" height="980"></svg>
+    <p>Kn=<input type="text" id="number" value="1">(max 25)<button onclick="partialGraph()">Generate</button></p>
+    <script src="graphModel.js"></script>
+    <script src="out.js"></script>
 </body>
-</html>
+</html> 

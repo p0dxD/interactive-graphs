@@ -1,158 +1,195 @@
-//code from https://bl.ocks.org/bryik/a3d0d7a0d9d69e6afe0fd8b8b3becec1
-// GRAPH GENERATION
+// //code from https://bl.ocks.org/bryik/a3d0d7a0d9d69e6afe0fd8b8b3becec1
+// // GRAPH GENERATION
 
-var graph = {};
+// var graph = {};
+// // var simulation, color, link, node, g, svg;
 
-// Generates a complete graph kn
-function generateCompleteGraph(n) {
-    // Number of vertices = n
-    graph.vCount = n;
+// // Generates a complete graph kn
+// function generateCompleteGraph(n) {
+//     // Number of vertices = n
+//     graph.vCount = n;
 
-    // Number of edges (from Handshake Lemma)
-    graph.eCount = (1/2) * n * (n - 1);
+//     // Number of edges (from Handshake Lemma)
+//     graph.eCount = (1/2) * n * (n - 1);
 
-    // Generate vertices
-    graph.nodes = [];
-    for (var i = 0; i < n; i++) {
-        graph.nodes.push({"id": i})
-    }
+//     // Generate vertices
+//     graph.nodes = [];
+//     for (var i = 0; i < n; i++) {
+//         graph.nodes.push({"id": i})
+//     }
 
-    // Generate edges
-    graph.links = [];
-    // Using Cartesian Product due to laziness
-    // it works, but generates a lot of useless "parallel edges".
-    // A better solution would be to generate C(n, 2) combinations.
-    for (var u = 0; u < n; u++) {
-        for (var v = 0; v < n; v++) {
-            if (u != v) {
-                graph.links.push({"target": u, "source": v})
-            }
-        }
-    }
-}
+//     // Generate edges
+//     graph.links = [];
+//     // Using Cartesian Product due to laziness
+//     // it works, but generates a lot of useless "parallel edges".
+//     // A better solution would be to generate C(n, 2) combinations.
+//     for (var u = 0; u < n; u++) {
+//         for (var v = 0; v < n; v++) {
+//             if (u != v) {
+//                 graph.links.push({"target": u, "source": v})
+//             }
+//         }
+//     }
+// }
 
-// Start with kn = 1
-generateCompleteGraph(1);
+// // Start with kn = 1
+// generateCompleteGraph(1);
+// initiateSvg(graph)
+// // graphModel =  new GraphModel(graph)
+// // graphModel.initiateSvg()
+// // graphSvg = initiateSvg(graph, "#complete",  ".link", ".node", "txt1")
+// // graphSvg = initiateSvg(graph, "#complete_two", ".link", ".node", "txt2")
 
 
-// VIEW
-// Based on Bostock's "Modifying a Force Layout II": https://bl.ocks.org/mbostock/0adcc447925ffae87975a3a81628a196
+// // VIEW
+// // Based on Bostock's "Modifying a Force Layout II": https://bl.ocks.org/mbostock/0adcc447925ffae87975a3a81628a196
 
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height"),
-    color = d3.scaleOrdinal(d3.schemeCategory10);
+// var links = {};
 
-// Label
-var text = svg.append("text")
-              .attr("x", 50)
-              .attr("y", height-40)
-              .attr("font-family", "sans-serif")
-              .attr("font-size", "35px")
-              .text("Kn = " + graph.vCount)
+// links["something"] = "testing"
 
-var simulation = d3.forceSimulation(graph.nodes)
-    .force("charge", d3.forceManyBody().strength(-50))
-    .force("link", d3.forceLink(graph.links).distance(200))
-    .force("x", d3.forceX())
-    .force("y", d3.forceY())
-    //.alphaTarget(1)
-    .on("tick", ticked);
+// console.log(links["something"])
+// function initiateSvg(graph) {
+//   console.log(graph)
+//     svg = d3.select("#complete"),
+//       width = +svg.attr("width"),
+//       height = +svg.attr("height"),
+//       color = d3.scaleOrdinal(d3.schemeCategory10);
 
-var g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-    link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link"),
-    node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
+//   // // Label
+//    text = svg.append("text")
+//                 .attr("x", 50)
+//                 .attr("y", height-40)
+//                 .attr("font-family", "sans-serif")
+//                 .attr("font-size", "35px")
+//                 .text("Kn = " + graph.vCount)
 
-restart();
+//    simulation = d3.forceSimulation(graph.nodes)
+//       .force("charge", d3.forceManyBody().strength(-50))
+//       .force("link", d3.forceLink(graph.links).distance(200))
+//       .force("x", d3.forceX())
+//       .force("y", d3.forceY())
+//       //.alphaTarget(1)
+//       .on("tick", ticked);
 
-function restart() {
+//    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
+//       link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link_complete"),
+//       node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node_complete");
 
-  // Update text label
-  d3.select("text").text("Kn = " + graph.vCount);
+//   restart();
+// }
+// function restart() {
 
-  // Apply the general update pattern to the nodes.
-  node = node.data(graph.nodes, function(d) { return d.id;});
+//   // Update text label
+//   d3.select("text").text("Kn = " + graph.vCount);
 
-  node.exit().transition()
-      .attr("r", 0)
-      .remove();
+//   // Apply the general update pattern to the nodes.
+//   node = node.data(graph.nodes, function(d) { return d.id;});
 
-  node = node.enter().append("circle")
-      .attr("fill", function(d) { return color(d.id); })
-      .call(function(node) { node.transition().attr("r", 8); })
-    .merge(node);
+//   node.exit().transition()
+//       .attr("r", 0)
+//       .remove();
+//   //draws the circle
+//   node = node.enter().append("circle")
+//       .attr("fill", function(d) { return color(d.id); })
+//       .call(function(node) { node.transition().attr("r", 8); })
+//     .merge(node);
 
-  // Apply the general update pattern to the links.
-  link = link.data(graph.links, function(d) { return d.source.id + "-" + d.target.id; });
+//   // Apply the general update pattern to the links.
+//   link = link.data(graph.links, function(d) { return d.source.id + "-" + d.target.id; });
 
-  // Keep the exiting links connected to the moving remaining nodes.
-  link.exit().transition()
-      .attr("stroke-opacity", 0)
-      .attrTween("x1", function(d) { return function() { return d.source.x; }; })
-      .attrTween("x2", function(d) { return function() { return d.target.x; }; })
-      .attrTween("y1", function(d) { return function() { return d.source.y; }; })
-      .attrTween("y2", function(d) { return function() { return d.target.y; }; })
-      .remove();
+//   // Keep the exiting links connected to the moving remaining nodes.
+//   //removes lines
+//   link.exit().transition()
+//       .attr("stroke-opacity", 0)
+//       // .attrTween("x1", function(d) { return function() { return d.source.x; }; })
+//       // .attrTween("x2", function(d) { return function() { return d.target.x; }; })
+//       // .attrTween("y1", function(d) { return function() { return d.source.y; }; })
+//       // .attrTween("y2", function(d) { return function() { return d.target.y; }; })
+//       .remove();
 
-  link = link.enter().append("line")
-      .call(function(link) { link.transition().attr("stroke-opacity", 1); })
-    .merge(link);
+//   //draws the line
+//   link = link.enter().append("line")
+//       .call(function(link) { link.transition().attr("stroke-opacity", 1); })
+//     .merge(link);
 
-  // Make nodes draggable
-  d3.selectAll("circle")
-      .call(d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended));
+//   // // Make nodes draggable
+//   // d3.selectAll("circle")
+//   //     .call(d3.drag()
+//   //       .on("start", dragstarted)
+//   //       .on("drag", dragged)
+//   //       .on("end", dragended));
 
-  // Update and restart the simulation.
-  simulation.nodes(graph.nodes);
-  simulation.force("link").links(graph.links);
-  simulation.alpha(1).restart();
-}
+//   // Update and restart the simulation.
+//   simulation.nodes(graph.nodes);
+//   simulation.force("link").links(graph.links);
+//   simulation.alpha(1).restart();
+// }
 
-function ticked() {
-  node.attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
+// function ticked() {
+//   node.attr("cx", function(d) { return d.x; })
+//       .attr("cy", function(d) { return d.y; })
 
-  link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
-}
+//   link.attr("x1", function(d) { return d.source.x; })
+//       .attr("y1", function(d) { return d.source.y; })
+//       .attr("x2", function(d) { return d.target.x; })
+//       .attr("y2", function(d) { return d.target.y; });
+// }
 
-function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-  d.fx = d.x;
-  d.fy = d.y;
-}
+// function dragstarted(d) {
+//   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+//   d.fx = d.x;
+//   d.fy = d.y;
+// }
 
-function dragged(d) {
-  d.fx = d3.event.x;
-  d.fy = d3.event.y;
-}
+// function dragged(d) {
+//   d.fx = d3.event.x;
+//   d.fy = d3.event.y;
+// }
 
-function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
-}
+// function dragended(d) {
+//   if (!d3.event.active) simulation.alphaTarget(0);
+//   d.fx = null;
+//   d.fy = null;
+// }
 
-function incrementGraph() {
-    var value = Number(document.getElementById("number").value)
-    console.log(typeof value)
-    if (value < 0 || !Number.isInteger(value) ) {
-        alert("Must be a natural number.");
-        return false;
-      } else if (value > 100) {
-        alert("Sorry value must be less than 100.");
-        return false;
-      }
-    console.log("ObtaineD: " + value)
-    // Generate new graph
-    // generateCompleteGraph(graph.vCount+1);
-    generateCompleteGraph(value)
-    // Update view
-    restart();
+// function incrementGraph() {
+//     var value = Number(document.getElementById("number_complete").value)
+//     console.log(typeof value)
+//     if (value < 0 || !Number.isInteger(value) ) {
+//         alert("Must be a natural number.");
+//         return false;
+//       } else if (value > 100) {
+//         alert("Sorry value must be less than 100.");
+//         return false;
+//       }
+//     console.log("ObtaineD: " + value)
+//     // Generate new graph
+//     // generateCompleteGraph(graph.vCount+1);
+//     generateCompleteGraph(value)
+//     // Update view
+//     restart()
+//     // initiateSvg(graph, "#complete")
 
-}
+// }
+
+
+// function partialGraph() {
+//   var value = Number(document.getElementById("number").value)
+//   console.log(typeof value)
+//   if (value < 0 || !Number.isInteger(value) ) {
+//       alert("Must be a natural number.");
+//       return false;
+//     } else if (value > 100) {
+//       alert("Sorry value must be less than 100.");
+//       return false;
+//     }
+//   console.log("ObtaineD: " + value)
+//   // Generate new graph
+//   // generateCompleteGraph(graph.vCount+1);
+//   // generateCompleteGraph(value)
+//   // Update view
+//   restart()
+//   // initiateSvg(graph, "#complete_two")
+
+// }
