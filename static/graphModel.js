@@ -186,8 +186,6 @@ function partialGraph() {
     }
   console.log("ObtaineD: " + value)
   // Generate new graph
-  // generateCompleteGraph(graph.vCount+1);
-  // generateCompleteGraph(value)
   // Update view
   name_subsystem = "complete_two";
   graphs["two"] = generateCompleteGraph(value, "cyclic")
